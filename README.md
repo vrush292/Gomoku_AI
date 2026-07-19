@@ -1,2 +1,2 @@
 # Gomoku_AI
-An intelligent implementation of the classic Gomoku board game built with AI-based move evaluation and win prediction
+A Gomoku (Five in a Row) game with an AI opponent that uses strategic decision-making to challenge human players.
