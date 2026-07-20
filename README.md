@@ -7,15 +7,12 @@ The AI analyzes board positions, predicts future moves, blocks opponent threats,
 ---
 
 ## 📸 Preview
-
-> Add screenshots or a gameplay GIF here.
-## 📸 Preview
-
+```
 <p align="center">
   <img src="image.png" alt="Gomoku AI Gameplay" width="700">
 </p>
 ---
-
+```
 ## ✨ Features
 
 - 🎯 Human vs AI gameplay
