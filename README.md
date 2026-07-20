@@ -10,9 +10,7 @@ The AI analyzes board positions, predicts future moves, blocks opponent threats,
 
 > Add screenshots or a gameplay GIF here.
 
-```
 image.png
-```
 
 ---
 
