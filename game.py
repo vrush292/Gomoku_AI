@@ -2,6 +2,7 @@ import pygame
 
 from board import Board
 from button import Button
+from ai.ai_player import AIPlayer
 
 from settings import (
     WINDOW_WIDTH,
@@ -28,11 +29,16 @@ class Game:
 
         self.board = Board()
 
-        # 1 = Black, 2 = White
+        # Player 1 = Human (Black)
+        # Player 2 = AI (White)
         self.current_player = 1
+        self.ai_player = 2
 
         self.game_over = False
         self.winner = None
+
+        # AI delay
+        self.ai_move_time = 0
 
         # Buttons
         self.restart_button = Button(
@@ -57,6 +63,7 @@ class Game:
         self.current_player = 1
         self.game_over = False
         self.winner = None
+        self.ai_move_time = 0
 
     def handle_events(self):
 
@@ -67,18 +74,22 @@ class Game:
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
 
-                # Restart
+                # Restart button
                 if self.restart_button.is_clicked(event):
                     self.restart_game()
                     continue
 
-                # Exit
+                # Exit button
                 if self.exit_button.is_clicked(event):
                     self.running = False
                     continue
 
-                # Don't allow moves after game over
+                # Ignore board clicks if game ended
                 if self.game_over:
+                    continue
+
+                # Ignore clicks during AI turn
+                if self.current_player == self.ai_player:
                     continue
 
                 row, col = self.board.get_cell(event.pos)
@@ -101,21 +112,52 @@ class Game:
 
                     else:
 
-                        if self.current_player == 1:
-                            self.current_player = 2
-                        else:
-                            self.current_player = 1
+                        # Switch to AI
+                        self.current_player = self.ai_player
+
+                        # AI thinks for 0.5 second
+                        self.ai_move_time = pygame.time.get_ticks() + 500
 
     def update(self):
-        pass
+
+        if (
+            not self.game_over
+            and self.current_player == self.ai_player
+            and pygame.time.get_ticks() >= self.ai_move_time
+        ):
+
+            move = AIPlayer.get_best_move(
+                self.board,
+                self.ai_player,
+                depth=3
+            )
+
+            if move:
+
+                row, col = move
+
+                self.board.place_stone(
+                    row,
+                    col,
+                    self.ai_player
+                )
+
+                if self.board.check_winner(self.ai_player):
+
+                    self.game_over = True
+                    self.winner = self.ai_player
+
+                else:
+
+                    self.current_player = 1
 
     def draw(self):
 
         self.screen.fill(BACKGROUND_COLOR)
 
-        # -----------------------------
-        # Game Title
-        # -----------------------------
+        # -------------------------
+        # Title
+        # -------------------------
         title_font = pygame.font.SysFont(
             "Arial",
             42,
@@ -134,17 +176,40 @@ class Game:
 
         self.screen.blit(title, title_rect)
 
-        # -----------------------------
-        # Draw Board
-        # -----------------------------
+        # -------------------------
+        # Turn Indicator
+        # -------------------------
+        info_font = pygame.font.SysFont(
+            "Arial",
+            24,
+            bold=True,
+        )
+
+        if not self.game_over:
+
+            if self.current_player == 1:
+                text = "Your Turn (Black)"
+            else:
+                text = "AI Thinking..."
+
+            info = info_font.render(
+                text,
+                True,
+                (60, 60, 60),
+            )
+
+            self.screen.blit(info, (40, 60))
+
+        # -------------------------
+        # Board
+        # -------------------------
         self.board.draw(self.screen)
 
-        # -----------------------------
-        # Winner Screen
-        # -----------------------------
+        # -------------------------
+        # Winner
+        # -------------------------
         if self.game_over:
 
-            # Dark transparent overlay
             overlay = pygame.Surface(
                 (WINDOW_WIDTH, WINDOW_HEIGHT),
                 pygame.SRCALPHA,
@@ -183,9 +248,9 @@ class Game:
                 winner_rect,
             )
 
-        # -----------------------------
+        # -------------------------
         # Buttons
-        # -----------------------------
+        # -------------------------
         self.restart_button.draw(self.screen)
         self.exit_button.draw(self.screen)
 
