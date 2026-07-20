@@ -11,8 +11,7 @@ The AI analyzes board positions, predicts future moves, blocks opponent threats,
 > Add screenshots or a gameplay GIF here.
 
 ```
-assets/gameplay.gif
-assets/screenshot.png
+image.png
 ```
 
 ---
