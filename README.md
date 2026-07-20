@@ -96,7 +96,7 @@ gomoku_ai/
 ### Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/gomoku-ai.git
+[git clone https://github.com/yourusername/gomoku-ai.git](https://github.com/vrush292/Gomoku_AI.git)
 cd gomoku-ai
 ```
 
