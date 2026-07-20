@@ -96,8 +96,8 @@ gomoku_ai/
 ### Clone the repository
 
 ```bash
-[git clone https://github.com/yourusername/gomoku-ai.git](https://github.com/vrush292/Gomoku_AI.git)
-cd gomoku-ai
+git clone https://github.com/vrush292/Gomoku_AI.git
+cd gomoku_AI
 ```
 
 ### Install dependencies
